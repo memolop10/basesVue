@@ -1,3 +1,4 @@
+
 <template>
   <h1>{{ titleHistory }}</h1>
   <table class="table-auto border-collapse border border-gray-400">
@@ -9,13 +10,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(item, index) in histories" 
-        :key="index" 
+      <tr
+        v-for="(item, index) in histories"
+        :key="index"
         :class="[
           'border border-gray-400',
           'text-zinc-800',
-          item.action === 'increment' ? 'bg-green-200': '',
-          item.action === 'decrement' ? 'bg-red-200' : '']"
+          item.action === 'increment' ? 'bg-green-200' : '',
+          item.action === 'decrement' ? 'bg-red-200' : '',
+          item.action === 'reset' ? 'bg-blue-200' : '',
+        ]"
       >
         <td class="border border-gray-400 px-4 py-2">{{ item.action }}</td>
         <td class="border border-gray-400 px-4 py-2">{{ item.previous }}</td>
@@ -25,22 +29,17 @@
   </table>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from 'vue';
-  export default defineComponent({
-    props: {
-    titleHistory: {
-      type: String,
-      requred: true
-    },
-    histories: {
-      type: Array,
-      required: true,
-    },
-  },
-  })
+<script setup lang="ts">
+interface CounterChanges {
+  action: string
+  previous: number
+  current: number
+}
+
+defineProps<{
+  titleHistory: string
+  histories: CounterChanges[]
+}>()
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style scoped lang="scss"></style>

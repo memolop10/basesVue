@@ -1,89 +1,67 @@
+// CounterPage.vue (Padre)
 <template>
-
   <div class="flex flex-col items-center justify-center h-screen gap-4">
-      <h1>{{ title }}</h1>
-     <Toats 
-     :color="colorToats"
-     :message="textToast"
-     :show="showToats"
-     />
+    <h1>{{ title }}</h1>
+    <Toats 
+      :color="colorToats"
+      :message="textToast"
+      :show="showToats"
+    />
 
     <Counter 
-      
       :max-counter="5"
       :initial-counter="1"
       @show-alert="handleShowAlert($event)" 
       @message="handleMessage($event)" 
       @color="handleColor($event)"
-      @update:histories="histories = $event"
-      />
-      <!-- @histories="handleHistories" -->
+      @update:histories="handleHistories"
+    />
 
-
-      <History 
-        :titleHistory="headHistoryText"
-        :histories="histories"
-      />
-
-    <!-- <section>
-      <h1>Historial de cambios</h1>
-      <ul>
-        <li v-for="(history, index) in histories" :key="index">
-          {{ history }}
-        </li>
-      </ul>
-    </section> -->
-
-
+    <History 
+      :titleHistory="headHistoryText"
+      :histories="histories"
+    />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import Toats from '../components/Toats.vue';
-import Counter from '../components/Counter.vue';
-import History from '../components/History.vue';
+<script setup lang="ts">
+import { ref } from 'vue'
+import Toats from '../components/Toats.vue'
+import Counter from '../components/Counter.vue'
+import History from '../components/History.vue'
+import type { CounterChanges } from '../interfaces/counter-changes.interface'
 
-import type { CounterChanges } from '../interfaces/counter-changes.interface';
+const title = ref("COUNTER APP")
+const showToats = ref(false)
+const textToast = ref("")
+const colorToats = ref("alert-warning")
+const histories = ref<CounterChanges[]>([])
+const headHistoryText = ref("Historial de Cambios")
+const resetKey = ref(0)
 
+const handleShowAlert = (value: boolean) => {
+  showToats.value = value
 
-export default defineComponent({
-  components: {
-    Counter,  
-    Toats,
-    History
-  },
-  data() {
-    return {
-      title: "COUNTER APP",
-      showToats: false,
-      textToast: "",
-      colorToats: "alert-warning",
-      histories: [] as CounterChanges[],
-      headHistoryText:"Historial de Cambios"
-    }
-  },
-
-  methods: {
-
-    handleShowAlert(valueAlert: boolean) {
-      this.showToats = valueAlert;
-    },
-    handleMessage(message: string) {
-      this.textToast = message;
-    },
-    handleColor(color: string) {
-      this.colorToats = color;
-    },
-    // handleHistories(changes: CounterChanges[]){
-    //   this.histories = changes;
-    // } 
-
-
-
+  if (value) {
+    // Ocultar el toast automáticamente después de 2 segundos
+    setTimeout(() => {
+      showToats.value = false;
+    }, 2000);
   }
-});
+}
+
+const handleMessage = (message: string) => {
+  textToast.value = message
+}
+
+const handleColor = (color: string) => {
+  colorToats.value = color
+}
+
+const handleHistories = (data: CounterChanges[]) => {
+  histories.value = data;
+}
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
