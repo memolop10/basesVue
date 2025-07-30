@@ -30,6 +30,10 @@ import Toats from '../components/Toats.vue'
 import Counter from '../components/Counter.vue'
 import History from '../components/History.vue'
 import type { CounterChanges } from '../interfaces/counter-changes.interface'
+import { provide } from 'vue'
+import { useCounter } from '../composables/useCounter'
+
+const counterState = useCounter({ initialCounter: 1, maxCounter: 5, minCounter: 0 })
 
 const title = ref("COUNTER APP")
 const showToats = ref(false)
@@ -37,7 +41,6 @@ const textToast = ref("")
 const colorToats = ref("alert-warning")
 const histories = ref<CounterChanges[]>([])
 const headHistoryText = ref("Historial de Cambios")
-const resetKey = ref(0)
 
 const handleShowAlert = (value: boolean) => {
   showToats.value = value
@@ -62,6 +65,7 @@ const handleHistories = (data: CounterChanges[]) => {
   histories.value = data;
 }
 
+provide('counterState', counterState)
 </script>
 
 <style scoped></style>
